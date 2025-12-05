@@ -1,0 +1,53 @@
+CXX = g++
+CXXFLAGS = -Wall -Werror
+BINPATH = bin
+A=Adapter
+AF=AbstractFactory
+B=Builder
+F=Factory
+FD=Facade
+S=Singleton
+ST=Strategy
+O=Observer
+
+build: createBin buildA buildAF buildB buildF buildFD buildS buildST buildO
+
+buildA: createBin
+	$(CXX) $(CXXFLAGS) src/$(A)/$(A).cpp -o $(BINPATH)/$(A)
+buildAF: createBin
+	$(CXX) $(CXXFLAGS) src/$(AF)/$(AF).cpp -o $(BINPATH)/$(AF)
+buildB: createBin
+	$(CXX) $(CXXFLAGS) src/$(B)/$(B).cpp -o $(BINPATH)/$(B)
+buildF: createBin
+	$(CXX) $(CXXFLAGS) src/$(F)/$(F).cpp -o $(BINPATH)/$(F)
+buildFD: createBin
+	$(CXX) $(CXXFLAGS) src/$(FD)/$(FD).cpp -o $(BINPATH)/$(FD)
+buildS: createBin
+	$(CXX) $(CXXFLAGS) src/$(S)/$(S).cpp -o $(BINPATH)/$(S)
+buildST: createBin
+	$(CXX) $(CXXFLAGS) src/$(ST)/$(ST).cpp -o $(BINPATH)/$(ST)
+buildO: createBin
+	$(CXX) $(CXXFLAGS) src/$(O)/$(O).cpp -o $(BINPATH)/$(O)
+
+adapter: buildA
+	./$(BINPATH)/$(A)
+abstractFactory: buildAF
+	./$(BINPATH)/$(AF)
+builder: buildB
+	./$(BINPATH)/$(B)
+factory: buildF
+	./$(BINPATH)/$(F)
+facade: buildFD
+	./$(BINPATH)/$(FD)
+singleton: buildS
+	./$(BINPATH)/$(S)
+strategy: buildST
+	./$(BINPATH)/$(ST)
+observer: buildO
+	./$(BINPATH)/$(O)
+
+createBin:
+	mkdir -p $(BINPATH)
+
+clean:
+	rm -rf bin

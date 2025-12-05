@@ -1,0 +1,17 @@
+CXX = g++
+CXXFLAGS = -Wall -Werror
+FILES = *.cpp
+BINPATH = bin
+SRCPATH = src
+
+build: createBin $(patsubst %.cpp, %.out, $(wildcard $(SRCPATH)/$(FILES)))
+cleanBuild: clean build
+
+%.out: %.cpp
+	$(CXX) $(CXXFLAGS) $< -o $(BINPATH)/$(@:src/%.out=%)
+
+clean:
+	rm -rf bin
+
+createBin:
+	mkdir -p $(BINPATH)
