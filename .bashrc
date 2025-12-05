@@ -36,7 +36,7 @@ current_file=${BASH_SOURCE}
 #	<<FOLDER VARIABLES>>
 #==================================
 home="/home/$user"
-repos="$home/REPOS"
+repos="$home/Desktop/REPOS"
 
 #	<<INFO NOTE>>
 # !! Use variables to change colors in functions !!
@@ -44,7 +44,7 @@ repos="$home/REPOS"
 #color codes:
 # 30m -- black  34m -- blue
 # 31m -- red    35m -- magenta
-# 32m -- green  36m -- light-blue
+# 1;1;1;32m -- green  36m -- light-blue
 # 33m -- yellow 37m -- white
 
 #	<<COLOR VARIABLES>>
@@ -115,9 +115,8 @@ alias git_info="git config --global user.name&&git config --global user.email"  
 #	<<GIT CLI>>
 #================================
 alias glist="gh repo list"
-alias gclone="gh repo clone"
 alias greate="gh repo create"
-
+alias gclone="gh repo clone"
 
 
 #	███████╗██╗   ██╗███╗   ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
@@ -149,8 +148,8 @@ parse_git_branch() {        # returns the git branch of the current folder
 
 #	<<PROMPT>>
 #================================
-change_prompt_color(){      # changes the color of the bash prompt
-	export PS1="\[\e[$1\][\[\e[m\]\[\e[$1\]\u\[\e[m\]\[\e[$1\]@\[\e[m\]\[\e[$1\]\h\[\e[m\] \[\e[$1\]\W\[\e[m\] \[\e[$1\]\$(parse_git_branch)\[\e[m\]\[\e[$1\]]\[\e[m\]\[\e[$1\]\\$\[\e[m\]"
+change_prompt(){      # changes prompt
+	export PS1="\[\e[1;32m\][\[\e[m\]\[\e[1;32m\]\u\[\e[m\]\[\e[1;32m\]@\[\e[m\]\[\e[1;32m\]\h\[\e[m\]\[\e[1;32m\] \[\e[m\]\[\e[1;32m\]\w\[\e[m\]\[\e[1;32m\] \[\e[m\]\[\e[37m\]\`parse_git_branch\`\[\e[m\]\[\e[1;32m\]]\[\e[m\] "
 }
 
 
@@ -161,15 +160,18 @@ change_prompt_color(){      # changes the color of the bash prompt
 #===============================
 
 set_repo_about(){           # sets a text note in the repository
-if(($1));
+if((!$1));
 then
-	cd "$1"&&echo $2>about.txt&&echo "Repository ${green}[[ ${PWD##*/} ]]${reset} about set to: \"${yellow}$2${reset}\""&&cd ..;
+	cd "$1"&&echo $2>about&&echo "Repository ${green}[[ ${PWD##*/} ]]${reset} about set to: \"${yellow}$2${reset}\""&&cd ..;
+else
+	echo "Invalid repository";
 fi
 }
 
 repos(){                    # lists all repositories owned by the user
+	mkdir -p $repos
 	echo ${green}"[Local repositories of user '$user']:"${white}
-	for x in `ls -1 $repos`; do printf "\t%-40s %-40s\n" "Name: $x" "About: `cat $repos/$x/about.txt 2>/dev/null`"; done;
+	for x in `ls -1 $repos`; do printf "\t%-40s %-40s\n" "Name: $x" "About: `cat $repos/$x/about 2>/dev/null`"; done;
 	echo ;
 }
 
@@ -194,7 +196,8 @@ repos(){                    # lists all repositories owned by the user
 Startup()    # EXECUTED ON STARTUP
 {
 	echo -e "${green}[Bashrc startup completed for host ${blue}`hostname`${green}]${reset}"&&repos;
-	export PS1="[\u@\h \W \[\e[32m\]\$(parse_git_branch)\[\e[m\]]\\$ ";
+	# export PS1="[\u@\h \W \[\e[1;1;1;32m\]\$(parse_git_branch)\[\e[m\]]\\$ ";
+	change_prompt;
 }
 
 Update()     # EXECUTED ON UPDATE
@@ -205,7 +208,8 @@ Update()     # EXECUTED ON UPDATE
 	else
 		clear;
 		echo -e "${green}[Bashrc update completed for host ${blue}`hostname`${green}]${reset}";
-		export PS1="[\u@\h \W \[\e[32m\]\$(parse_git_branch)\[\e[m\]]\\$ ";
+        # export PS1="[\u@\h \W \[\e[1;1;1;32m\]\$(parse_git_branch)\[\e[m\]]\\$ ";
+        change_prompt;
 	fi
 }
 
